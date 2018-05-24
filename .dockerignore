@@ -1,2 +1,4 @@
-node_modules
-README.md
+*
+!index.js
+!npm-shrinkwrap.json
+!package.json

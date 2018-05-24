@@ -1,14 +1,17 @@
-# Pulling nodejs base image
-FROM node:0.12
+FROM node:8.11.2-alpine as build
 
-# Skip npm install if package.json didn't changed
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
-RUN mkdir -p /opt/status-checker && cp -a /tmp/node_modules /opt/status-checker
+WORKDIR /usr/app/build
 
-# Loading application code
+COPY package.json npm-shrinkwrap.json ./
+RUN npm install --production
+
+
+FROM node:8.11.2-alpine
+
 WORKDIR /opt/status-checker
-ADD . /opt/status-checker
+
+COPY --from=build /usr/app/build ./
+COPY . .
 
 # Expose API port
 EXPOSE 9090
